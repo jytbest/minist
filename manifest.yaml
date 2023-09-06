@@ -1,0 +1,63 @@
+#必填
+name:   "mnist-demo"
+# 选填, app名称  ,单模型app必填
+app:    classification
+platform:
+- APulis-IQI
+#必填  TO BE DELETED 模型来源，可选值：publish（从代码开发中发布） | preset（系统预置模型） | custom （用户自定义页面上传）
+source: preset
+#必填，模型所使用的训练框架
+framework: "Tensorflow"
+#必填，模型支持的领域，详情见模型任务对应列表
+field: "cv"
+#必填，模型支持的任务类型，详情见模型任务对应列表
+task: "classification"
+#必填，模型所使用到的镜像环境
+engine: "arbor.gpu02.cn:8443/publicharbor_systemadmin-organization/tensorflow:2.6.0-gpu-py3"
+#选填，模型可使用的设备信息，可多填
+devices:
+  
+  #选填，最少使用的CPU核心数，单位 个
+- cpu: 2
+  #选填，最少使用的设备卡数
+  device_num: 1
+  #选填，最少使用的内存大小，单位 GB
+  memory: 4
+  #选填，设备型号，gpu与cpu不需要填写该字段 目前可选值 a310 | a910
+  series: 
+  #必填，目前可选值  cpu | nvidia_gpu | huawei_npu
+  type: cpu
+#选填，分布式框架，如果不支持分布式训练，则去掉该字段，目前可选值 Horovod | MPI | Ray | HCCL
+distributed_framework: ""
+
+train:
+  #必填,训练启动脚本,平台会validate该脚本存在
+  entry: "model.py"
+  #选填，是否支持训练可视化，默认可视化路径为平台定义的输出路径，TensorBoard | MindInsight | NNI
+  visualization: "tensorboard"
+  
+  #必填,平台参数相对于模型命令行参数的映射
+  sys_params:
+    - arg: "data_path"
+      name: "data_path"
+      desc: "数据集路径"
+    - arg: "resume"
+      name: "pretrained_model"
+      desc: "预训练模型路径"
+    - arg: "output"
+      name: "output_path"
+      desc: "输出路径"
+eval:
+  #必填,训练启动脚本,平台会validate该脚本存在
+  entry: "model.py"
+  #必填,平台参数相对于模型命令行参数的映射
+  sys_params:
+    - arg: "data_path"
+      name: "data_path"
+      desc: "数据集路径"
+    - arg: "resume"
+      name: "checkpoint_path"
+      desc: "评估模型路径"
+    - arg: "output"
+      name: "output_path"
+      desc: "评估结果路径"
